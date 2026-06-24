@@ -1,0 +1,40 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,600;1,9..144,700&family=Nunito:wght@400;500;600;700;800;900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-serif: "Fraunces", Georgia, serif;
+  --font-sans: "Nunito", ui-sans-serif, system-ui, sans-serif;
+  
+  --color-cream: #fffdf9;
+  --color-cream-soft: #fcf6ee;
+  --color-sand: #f2e2d0;
+  --color-terra: #e28d62;
+  --color-terra-deep: #ca6b3e;
+  --color-terra-light: #fbe6da;
+  --color-terra-ink: #9b4b24;
+  --color-sage: #c5d3b2;
+  --color-sage-deep: #8da36d;
+  --color-sage-light: #edf2e7;
+  --color-sage-ink: #55693e;
+  --color-gold-soft: #f4e3be;
+  --color-gold-ink: #8f6d27;
+  --color-plum: #aa6b88;
+  --color-plum-ink: #77435a;
+  --color-ink: #3f3128;
+  --color-ink-soft: #7a685c;
+  --color-line: #ecdcc8;
+  --color-line-soft: #f6ebdc;
+  
+  --shadow-card: 0 4px 20px -5px rgba(120, 80, 50, 0.06), 0 26px 60px -15px rgba(120, 80, 50, 0.16);
+  --radius-xl: 30px;
+  --radius-sm: 18px;
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--color-ink);
+  background-color: var(--color-cream-soft);
+  background-image: radial-gradient(circle at 100% 0%, rgba(226, 141, 98, 0.08) 0%, transparent 45%), radial-gradient(circle at 0% 100%, rgba(141, 163, 109, 0.09) 0%, transparent 45%);
+  -webkit-font-smoothing: antialiased;
+}
+
