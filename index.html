@@ -1,1245 +1,226 @@
-<!doctype html>
-<html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Descubra o cardápio ideal pro seu bebê</title>
-    <style>
-      /* Smooth transitions and fade animations */
-      .fade-in-active {
-        animation: smoothFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-      }
-      @keyframes smoothFade {
-        from {
-          opacity: 0;
-          transform: translateY(16px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-      /* Custom loader animation */
-      .spinner-glow {
-        box-shadow: 0 0 20px rgba(202,107,62,0.25);
-      }
-      /* Carousel transitions */
-      .slide-active {
-        opacity: 1;
-        transform: translateX(0);
-        transition: all 0.5s ease-in-out;
-      }
-      .slide-hidden {
-        opacity: 0;
-        transform: translateX(30px);
-        position: absolute;
-        width: 100%;
-        pointer-events: none;
-      }
-    </style>
-  </head>
-  <body class="bg-[#fcf6ee] text-[#3f3128] min-h-screen flex flex-col justify-between overflow-x-hidden antialiased">
-    
-    <!-- Top Progress & Branding Bar -->
-    <header class="w-full pt-6 pb-4 px-4 md:px-12 bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-[#f6ebdc]">
-      <div class="max-w-6xl mx-auto flex flex-col items-center">
-        <!-- Logo and brand -->
-        <div class="flex items-center gap-3 mb-4 cursor-pointer hover:opacity-90 transition-opacity" onclick="resetQuiz()">
-          <div class="w-9 h-9 md:w-10 md:h-10 bg-[#e28d62] rounded-full flex items-center justify-center text-white shadow-sm">
-            <!-- Custom Baby inline SVG -->
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 md:w-6 md:h-6">
-              <path d="M9 12h.01M15 12h.01M10 16c.5 1 1.5 1.5 2 1.5s1.5-.5 2-1.5" />
-              <path d="M19 6.3a9 9 0 0 1 1.8 3.9 2 2 0 0 1 0 3.6 9 9 0 0 1-17.6 0 2 2 0 0 1 0-3.6A9 9 0 0 1 12 3c1.5 0 3 .4 4.3 1.2" />
-              <path d="M12 3v-1M19 6l-1-1" />
-            </svg>
-          </div>
-          <span class="font-serif italic text-xl md:text-2xl font-black text-[#3f3128]">Mamãe Larissa Prado</span>
-        </div>
-
-        <!-- Progress bar, only active when quiz starts -->
-        <div id="progressBarContainer" class="w-full max-w-xl hidden flex-col gap-1.5">
-          <div class="w-full h-2 bg-[#f2e2d0] rounded-full overflow-hidden">
-            <div id="progressBarFill" class="h-full bg-[#ca6b3e] rounded-full transition-all duration-300 shadow-[0_0_8px_rgba(202,107,62,0.4)]" style="width: 10%;"></div>
-          </div>
-          <div class="flex justify-between items-center text-[10px] md:text-[11px] uppercase tracking-widest font-extrabold text-[#9b4b24]">
-            <span>Diagnóstico do bebê</span>
-            <span id="progressBarLabel">Pergunta 1 de 5</span>
-          </div>
-        </div>
-      </div>
-    </header>
-
-    <!-- Main dynamic layout container -->
-    <main class="flex-grow w-full max-w-6xl mx-auto px-4 py-8 md:py-12 flex flex-col justify-center">
-
-      <!-- ==================== SCREEN 1: INTRO ==================== -->
-      <section id="screen-intro" class="fade-in-active grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-        <!-- Intro Left Branding Panel -->
-        <div class="lg:col-span-5 flex flex-col space-y-6 text-center lg:text-left">
-          <div class="space-y-4">
-            <span class="inline-flex items-center gap-1.5 px-4 py-1.5 bg-white border border-[#e28d62]/20 text-[#8da36d] text-xs font-black uppercase tracking-[0.15em] rounded-full shadow-sm mx-auto lg:mx-0">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3.5 h-3.5 text-[#e28d62]">
-                <path d="M12 2l2.4 7.4H22l-6 4.5 2.3 7.1L12 16.5 5.7 21l2.3-7.1-6-4.5h7.6z"/>
-              </svg>
-              Nutrição Especializada
-            </span>
-            <h1 class="font-serif text-4xl md:text-5xl font-black leading-[1.1] text-[#3f3128]">
-              Descubra o <span class="italic text-[#ca6b3e]">cardápio ideal</span> pro seu bebê
-            </h1>
-            <p class="text-base md:text-lg text-[#7a685c] leading-relaxed">
-              Cada fase do crescimento exige texturas e nutrientes específicos. Responda 5 perguntas rápidas e receba um diagnóstico exclusivo com o caminho certo pra você parar de adivinhar.
-            </p>
-          </div>
-
-          <!-- Doctor badge box -->
-          <div class="bg-[#edf2e7] p-5 rounded-[22px] border border-[#c5d3b2] flex items-start gap-4 text-left">
-            <div class="w-10 h-10 bg-[#8da36d] rounded-full flex-shrink-0 flex items-center justify-center text-white shadow-sm">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" class="w-5 h-5">
-                <path d="M20 6L9 17l-5-5"/>
-              </svg>
-            </div>
-            <div>
-              <h4 class="font-bold text-[#55693e] text-sm md:text-base mb-0.5">Análise de Nutricionista</h4>
-              <p class="text-xs md:text-sm text-[#55693e]/90 leading-normal">
-                Baseado no protocolo de Introdução Alimentar Segura para cada mês de vida do seu pequeno.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Intro Right Card -->
-        <div class="lg:col-span-7 flex flex-col items-center">
-          <div class="w-full max-w-xl bg-white rounded-[28px] md:rounded-[32px] p-6 md:p-10 shadow-[0_20px_50px_-12px_rgba(120,80,50,0.12)] border border-[#f6ebdc] text-center space-y-6 md:space-y-8">
-            <div class="space-y-3">
-              <span class="inline-block bg-[#fcf6ee] text-[#9b4b24] font-extrabold text-[11px] md:text-xs tracking-widest uppercase px-3.5 py-1.5 rounded-full border border-[#ecdcc8]">
-                Quiz · Leva só 1 minuto
-              </span>
-              <h2 class="text-2xl md:text-3xl font-serif font-bold text-[#3f3128]">
-                Vamos descobrir a etapa ideal?
-              </h2>
-              <p class="text-sm md:text-base text-[#7a685c] leading-relaxed">
-                Cada refeição conta pro desenvolvimento do paladar do seu bebê. Descubra agora as respostas certas.
-              </p>
-            </div>
-
-            <div class="pt-2">
-              <button onclick="startQuiz()" class="w-full py-4 md:py-5 bg-gradient-to-b from-[#f39b69] to-[#ca6b3e] hover:from-[#f4a779] hover:to-[#d17446] text-white rounded-full font-black text-lg md:text-xl shadow-[0_12px_26px_-6px_rgba(202,107,62,0.4)] hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-3 cursor-pointer group border-0">
-                Começar o quiz
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-5 h-5 md:w-6 md:h-6 transition-transform group-hover:translate-x-1">
-                  <path d="M5 12h14M13 6l6 6-6 6" />
-                </svg>
-              </button>
-            </div>
-
-            <div class="flex flex-wrap justify-center gap-x-6 gap-y-3 pt-2 text-xs font-bold text-[#7a685c]">
-              <span class="flex items-center gap-1.5">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4 text-[#8da36d]">
-                  <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
-                </svg>
-                Leva 1 minuto
-              </span>
-              <span class="flex items-center gap-1.5">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-4 h-4 text-[#e28d62]">
-                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-                </svg>
-                Feito para mamães
-              </span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ==================== SCREEN 2: QUIZ ==================== -->
-      <section id="screen-quiz" class="hidden fade-in-active grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
-        <!-- Quiz Left Info Panel -->
-        <div class="lg:col-span-5 space-y-6 text-center lg:text-left lg:sticky lg:top-28">
-          <span class="inline-flex items-center gap-1.5 px-4 py-1.5 bg-white border border-[#e28d62]/20 text-[#8da36d] text-xs font-black uppercase tracking-[0.15em] rounded-full shadow-sm mx-auto lg:mx-0">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3.5 h-3.5 text-[#e28d62]">
-              <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
-            </svg>
-            Nutrição com carinho
-          </span>
-          <h2 class="font-serif text-3xl md:text-4xl font-bold leading-tight text-[#3f3128]">
-            Cada resposta molda o seu <span class="italic text-[#ca6b3e]">diagnóstico personalizado</span>
-          </h2>
-          <p class="text-sm md:text-base text-[#7a685c] leading-relaxed">
-            As dificuldades mais comuns surgem por tentar aplicar métodos genéricos. Vamos desenhar o caminho sob medida pro seu bebê.
-          </p>
-
-          <div class="hidden lg:block bg-[#edf2e7] p-4 rounded-xl border border-[#c5d3b2] text-left">
-            <p class="text-xs text-[#55693e] font-bold leading-normal">
-              💡 Você pode voltar a qualquer momento caso queira ajustar alguma resposta anterior.
-            </p>
-          </div>
-
-          <!-- Back button -->
-          <button onclick="handleBack()" class="inline-flex items-center gap-2 text-sm font-extrabold text-[#e28d62] hover:text-[#ca6b3e] transition-colors cursor-pointer group border-0 bg-transparent">
-            ← Voltar para a pergunta anterior
-          </button>
-        </div>
-
-        <!-- Quiz Right Container (Renders dynamic questions) -->
-        <div class="lg:col-span-7">
-          <div class="bg-white rounded-[28px] md:rounded-[32px] p-6 md:p-10 shadow-[0_20px_50px_-12px_rgba(120,80,50,0.12)] border border-[#f6ebdc]">
-            <!-- Dynamic Question Content -->
-            <div id="quizQuestionBox">
-              <!-- Will be populated by JS -->
-            </div>
-            
-            <!-- Mobile Back link -->
-            <div class="mt-6 flex justify-center lg:hidden">
-              <button onclick="handleBack()" class="text-xs font-bold text-[#7a685c]/80 underline decoration-dotted bg-transparent border-0">
-                Voltar
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ==================== SCREEN 3: LOADING ==================== -->
-      <section id="screen-loading" class="hidden fade-in-active max-w-xl mx-auto bg-white rounded-[28px] md:rounded-[32px] p-8 md:p-12 shadow-[0_20px_50px_-12px_rgba(120,80,50,0.12)] border border-[#f6ebdc] text-center space-y-8">
-        <!-- Loading Spinner -->
-        <div class="relative w-20 h-20 mx-auto">
-          <div class="absolute inset-0 rounded-full border-4 border-[#fbe6da] border-t-[#ca6b3e] animate-spin spinner-glow"></div>
-          <div class="absolute inset-2 bg-[#fcf6ee] rounded-full flex items-center justify-center text-[#ca6b3e]">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-7 h-7">
-              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-            </svg>
-          </div>
-        </div>
-
-        <div class="space-y-3">
-          <h2 class="text-2xl md:text-3xl font-serif font-bold text-[#3f3128]">Analisando as respostas...</h2>
-          <p class="text-sm md:text-base text-[#7a685c]">Estamos cruzando os dados do seu bebê com o protocolo de nutrição materno-infantil.</p>
-        </div>
-
-        <!-- Step progressions -->
-        <div class="max-w-xs mx-auto text-left space-y-3 pt-4 border-t border-[#f6ebdc]">
-          <div id="load-step-1" class="flex items-center gap-3 opacity-40 transition-opacity duration-300">
-            <div class="w-6 h-6 rounded-full bg-[#f2e2d0] text-white flex items-center justify-center text-xs" id="load-icon-1">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" class="w-3.5 h-3.5"><path d="M20 6L9 17l-5-5"/></svg>
-            </div>
-            <span class="text-sm md:text-base font-bold text-[#3f3128]">Identificando a fase alimentar</span>
-          </div>
-
-          <div id="load-step-2" class="flex items-center gap-3 opacity-40 transition-opacity duration-300">
-            <div class="w-6 h-6 rounded-full bg-[#f2e2d0] text-white flex items-center justify-center text-xs" id="load-icon-2">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" class="w-3.5 h-3.5"><path d="M20 6L9 17l-5-5"/></svg>
-            </div>
-            <span class="text-sm md:text-base font-bold text-[#3f3128]">Cruzando com as dificuldades</span>
-          </div>
-
-          <div id="load-step-3" class="flex items-center gap-3 opacity-40 transition-opacity duration-300">
-            <div class="w-6 h-6 rounded-full bg-[#f2e2d0] text-white flex items-center justify-center text-xs" id="load-icon-3">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" class="w-3.5 h-3.5"><path d="M20 6L9 17l-5-5"/></svg>
-            </div>
-            <span class="text-sm md:text-base font-bold text--[#3f3128]">Definindo o cardápio ideal</span>
-          </div>
-        </div>
-      </section>
-
-      <!-- ==================== SCREEN 4: RESULT ==================== -->
-      <section id="screen-result" class="hidden fade-in-active max-w-4xl mx-auto space-y-12">
-        <!-- Top Reset/Back Trigger -->
-        <div class="flex justify-start">
-          <button onclick="resetQuiz()" class="inline-flex items-center gap-1.5 text-xs md:text-sm font-extrabold text-[#7a685c] hover:text-[#3f3128] transition-colors cursor-pointer border-0 bg-transparent">
-            ← Refazer o diagnóstico
-          </button>
-        </div>
-
-        <!-- 1. RESULTADO DO QUIZ: Hero / Fase que o bebê está -->
-        <div class="bg-gradient-to-br from-[#edf2e7] to-white border-2 border-[#ecdcc8] rounded-[28px] md:rounded-[32px] p-6 md:p-10 text-center shadow-[0_20px_50px_-12px_rgba(120,80,50,0.12)] relative overflow-hidden">
-          <div class="absolute top-0 right-0 w-32 h-32 bg-[#8da36d]/5 rounded-full blur-2xl -mr-12 -mt-12"></div>
-          <div class="absolute bottom-0 left-0 w-32 h-32 bg-[#e28d62]/5 rounded-full blur-2xl -ml-12 -mb-12"></div>
-
-          <span id="resultTag" class="inline-block bg-[#8da36d] text-white font-extrabold text-xs tracking-widest uppercase px-4 py-1.5 rounded-full mb-4 md:mb-6 shadow-sm">
-            Fase: Início (6 a 8 meses)
-          </span>
-          <h1 class="font-serif text-3xl md:text-4.5xl font-black text-[#3f3128] leading-tight mb-4">
-            Seu bebê está <span id="resultPhase" class="italic text-[#ca6b3e]">no comecinho da introdução alimentar</span>
-          </h1>
-          <p id="resultLead" class="text-base md:text-lg text-[#7a685c] max-w-2xl mx-auto leading-relaxed">
-            Essa é a fase que constrói (ou compromete) o paladar do seu bebê. Cada refeição agora conta pro resto da vida dele.
-          </p>
-        </div>
-
-        <!-- Details Grid (Significado & Caminho Ideal) -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-          <!-- Que significa essa fase -->
-          <div class="bg-white rounded-[24px] md:rounded-[28px] p-6 md:p-8 shadow-[0_20px_50px_-12px_rgba(120,80,50,0.12)] border border-[#f6ebdc] flex flex-col justify-between">
-            <div>
-              <h2 class="text-xl md:text-2xl font-serif font-bold text-[#3f3128] mb-4 flex items-center gap-2">
-                <span class="w-2.5 h-2.5 rounded-full bg-[#ca6b3e]"></span>
-                O que isso significa pra você hoje
-              </h2>
-              <p class="text-sm md:text-base text-[#7a685c] leading-relaxed mb-6">
-                Com base no seu preenchimento, o maior obstáculo atual não é falta de cuidado ou dedicação — é o cansaço gerado por decidir cada refeição no improviso. Seguir sem um plano completo eleva os riscos de recusar alimentos ou pular fases cruciais.
-              </p>
-            </div>
-
-            <!-- Dynamic Warn message -->
-            <div class="bg-[#fbe6da] p-4 md:p-5 rounded-2xl border border-[#e28d62]/20 flex gap-3 items-start">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-5 h-5 text-[#ca6b3e] flex-shrink-0 mt-0.5">
-                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0zM12 9v4M12 17h.01" />
-              </svg>
-              <span id="resultWarn" class="text-xs md:text-sm font-bold text-[#9b4b24] leading-snug">
-                Nessa fase, oferecer na textura errada ou pular a ordem certa dos alimentos é o que mais gera medo de engasgo e recusa.
-              </span>
-            </div>
-          </div>
-
-          <!-- Caminho Ideal -->
-          <div class="bg-white rounded-[24px] md:rounded-[28px] p-6 md:p-8 shadow-[0_20px_50px_-12px_rgba(120,80,50,0.12)] border border-[#f6ebdc] flex flex-col justify-between">
-            <div>
-              <h2 class="text-xl md:text-2xl font-serif font-bold text-[#3f3128] mb-4 flex items-center gap-2">
-                <span class="w-2.5 h-2.5 rounded-full bg-[#8da36d]"></span>
-                O caminho ideal para o seu bebê
-              </h2>
-              <p class="text-sm md:text-base text-[#7a685c] leading-relaxed mb-6">
-                Você não precisa gastar horas estudando nutrição nem improvisando receitas na cozinha. Seu pequeno precisa de um passo a passo estruturado:
-              </p>
-            </div>
-
-            <ul class="space-y-3.5">
-              <li class="flex gap-3 items-start text-sm md:text-base font-bold text-[#3f3128]">
-                <div class="w-6 h-6 rounded-full bg-gradient-to-br from-[#c5d3b2] to-[#8da36d] text-white flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" class="w-3.5 h-3.5"><path d="M20 6L9 17l-5-5"/></svg>
-                </div>
-                <span>Cada alimento na fase e textura correta</span>
-              </li>
-              <li class="flex gap-3 items-start text-sm md:text-base font-bold text-[#3f3128]">
-                <div class="w-6 h-6 rounded-full bg-gradient-to-br from-[#c5d3b2] to-[#8da36d] text-white flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" class="w-3.5 h-3.5"><path d="M20 6L9 17l-5-5"/></svg>
-                </div>
-                <span>Lista de compras e preparo otimizados</span>
-              </li>
-              <li class="flex gap-3 items-start text-sm md:text-base font-bold text-[#3f3128]">
-                <div class="w-6 h-6 rounded-full bg-gradient-to-br from-[#c5d3b2] to-[#8da36d] text-white flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" class="w-3.5 h-3.5"><path d="M20 6L9 17l-5-5"/></svg>
-                </div>
-                <span>Variedade ampla que blinda da seletividade</span>
-              </li>
-              <li class="flex gap-3 items-start text-sm md:text-base font-bold text-[#3f3128]">
-                <div class="w-6 h-6 rounded-full bg-gradient-to-br from-[#c5d3b2] to-[#8da36d] text-white flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" class="w-3.5 h-3.5"><path d="M20 6L9 17l-5-5"/></svg>
-                </div>
-                <span>Refeições tranquilas e prazerosas, sem medos</span>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <!-- Solução Personalizada (Targeted Copy) -->
-        <div class="bg-gradient-to-br from-[#fdf6ec] to-[#fbe6da] border-2 border-[#ca6b3e] rounded-[24px] md:rounded-[28px] p-6 md:p-8 shadow-[0_20px_50px_-12px_rgba(120,80,50,0.12)]">
-          <div class="space-y-4">
-            <span class="inline-block bg-[#ca6b3e] text-white text-[10px] md:text-xs font-black uppercase tracking-widest px-3 py-1 rounded-full">
-              DIAGNÓSTICO PERSONALIZADO ⚡
-            </span>
-            <h3 class="text-2xl md:text-3xl font-serif font-black text-[#3f3128]">
-              Análise de Risco: O perigo invisível do improviso na sua rotina
-            </h3>
-            
-            <div class="space-y-4 text-sm md:text-base text-[#3f3128] leading-relaxed" id="customAnalysisBox">
-              <!-- Dynamically populated copy using variables from the user selection -->
-            </div>
-          </div>
-        </div>
-
-        <!-- ==================== 2. QUEM ESTÁ FALANDO ISSO: Persona Bio ==================== -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
-          <!-- Foto da Persona (Left Column) -->
-          <div class="lg:col-span-5 bg-white border border-[#f6ebdc] rounded-[24px] md:rounded-[28px] overflow-hidden shadow-card flex flex-col justify-center items-center p-6 text-center">
-            <div class="relative mb-4">
-              <div class="absolute -inset-1.5 bg-gradient-to-tr from-[#ca6b3e] to-[#8da36d] rounded-full blur opacity-40"></div>
-              <img 
-                src="https://images.unsplash.com/photo-1594824813573-246434de83fb?auto=format&fit=crop&q=80&w=400&h=400"
-                alt="Mamãe Larissa Prado" 
-                class="relative w-40 h-40 md:w-48 md:h-48 rounded-full border-4 border-[#fffdf9] object-cover shadow-md"
-                referrerpolicy="no-referrer"
-              />
-            </div>
-            <h4 class="font-serif text-xl font-bold text-[#3f3128]">Mamãe Larissa Prado</h4>
-            <p class="text-xs text-[#ca6b3e] font-black uppercase tracking-widest mt-1">Idealizadora do Método</p>
-            <div class="w-12 h-0.5 bg-[#f2e2d0] my-3"></div>
-            <p class="text-xs text-[#7a685c] italic max-w-xs">
-              "Minha missão é guiar você para que a introdução alimentar do seu filho seja um momento de orgulho e afeto, não de choro e panelas jogadas fora."
-            </p>
-          </div>
-
-          <!-- Quem é a Persona (Right Column) -->
-          <div class="lg:col-span-7 bg-white border border-[#f6ebdc] rounded-[24px] md:rounded-[28px] p-6 md:p-8 shadow-card flex flex-col justify-between space-y-6">
-            <div class="space-y-4">
-              <span class="inline-block bg-[#edf2e7] text-[#55693e] text-xs font-black uppercase tracking-widest px-3 py-1.5 rounded-full border border-[#c5d3b2]/40">
-                QUEM ESTÁ TE DIZENDO ISSO?
-              </span>
-              <h3 class="text-2xl md:text-3xl font-serif font-black text-[#3f3128] leading-tight">
-                Olá, eu sou a <span class="italic text-[#ca6b3e]">Larissa Prado</span>
-              </h3>
-              <p class="text-sm md:text-base text-[#3f3128] leading-relaxed">
-                Sou mãe do Bento, Nutricionista Materno-Infantil e criadora do programa <b>Cardápio Ideal</b>. Depois de ver centenas de mães chegando ao meu consultório exaustas, sem saber o que cozinhar, com medo de engasgo e desesperadas com a recusa de alimentos, percebi que o real problema não era falta de amor — era a total falta de um <b>plano sequencial pronto</b>.
-              </p>
-              <p class="text-sm md:text-base text-[#3f3128] leading-relaxed">
-                Eu juntei a minha experiência clínica ao meu dia a dia como mãe para desenhar uma rota simples, onde você não precisa perder horas cozinhando pratos mirabolantes ou se descabelando na frente do fogão.
-              </p>
-            </div>
-
-            <div class="border-t border-[#f6ebdc] pt-4 flex flex-wrap items-center justify-between gap-4">
-              <div class="flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-5 h-5 text-[#ca6b3e]">
-                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-                </svg>
-                <span class="text-xs font-black text-[#3f3128] uppercase tracking-wider">Feito com carinho de mãe para mãe ❤️</span>
-              </div>
-              <span class="text-xs font-bold text-[#8da36d] bg-[#edf2e7] px-3 py-1 rounded-full">CRM-CRN Ativo</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- ==================== 3. PRODUTO + BÔNUS ==================== -->
-        <div class="bg-white border-2 border-[#ecdcc8] rounded-[28px] md:rounded-[32px] p-6 md:p-10 shadow-[0_20px_50px_-12px_rgba(120,80,50,0.12)] space-y-8">
-          <div class="text-center max-w-xl mx-auto space-y-2">
-            <span class="text-[#ca6b3e] text-xs md:text-sm font-black uppercase tracking-widest block">Conteúdo Completo</span>
-            <h2 class="text-2xl md:text-3xl font-serif font-black text-[#3f3128]">Tudo o que você vai receber hoje</h2>
-            <p class="text-sm text-[#7a685c]">Muito mais do que um guia, um plano diário para desobstruir e acalmar a sua rotina materna.</p>
-          </div>
-
-          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-            <!-- Left: Foto do Produto (Digital Guide & Mockup) -->
-            <div class="lg:col-span-5 bg-[#fcf6ee] rounded-[22px] p-6 border border-[#f6ebdc] flex flex-col items-center relative overflow-hidden">
-              <div class="absolute top-0 right-0 w-24 h-24 bg-[#ca6b3e]/5 rounded-full blur-xl"></div>
-              
-              <!-- Realistic Mockup render -->
-              <div class="relative h-60 w-full flex justify-center items-center">
-                <!-- Main digital e-book card -->
-                <div class="relative w-36 h-48 bg-gradient-to-br from-[#f39b69] to-[#ca6b3e] rounded-xl shadow-2xl border-2 border-white p-4 flex flex-col justify-between text-white transform -rotate-6 transition-transform hover:rotate-0 duration-300 z-10">
-                  <div class="flex justify-between items-start">
-                    <span class="text-[8px] font-extrabold bg-white/20 px-1.5 py-0.5 rounded">PDF PREMIUM</span>
-                    <span class="text-sm">🥣</span>
-                  </div>
-                  <div>
-                    <h4 class="font-serif text-sm font-black leading-tight">CARDÁPIO IDEAL DO BEBÊ</h4>
-                    <p class="text-[7px] opacity-90 font-bold uppercase tracking-wider mt-1">Dos 6 aos 24 Meses</p>
-                  </div>
-                  <div class="border-t border-white/20 pt-2 flex justify-between items-center text-[6px] opacity-85">
-                    <span>Guia Oficial</span>
-                    <span>Larissa Prado</span>
-                  </div>
-                </div>
-
-                <!-- Secondary recipe card mockup overlapping -->
-                <div class="absolute bottom-4 right-2 w-28 h-36 bg-white border border-[#f2e2d0] rounded-xl shadow-lg p-3 flex flex-col justify-between transform rotate-12 transition-transform hover:rotate-0 duration-300 z-20">
-                  <div class="space-y-1">
-                    <span class="text-[7px] text-[#8da36d] font-black uppercase tracking-wider block">BÔNUS EXCLUSIVO</span>
-                    <h5 class="text-[10px] font-black text-[#3f3128] leading-tight">Papinhas de Geladeira</h5>
-                    <p class="text-[6.5px] text-[#7a685c]">Como congelar do jeito certo sem perder nutrientes.</p>
-                  </div>
-                  <div class="h-1.5 bg-[#f2e2d0] rounded-full overflow-hidden">
-                    <div class="h-full bg-[#8da36d] w-3/4 rounded-full"></div>
-                  </div>
-                </div>
-              </div>
-
-              <span class="text-xs font-black text-[#9b4b24] tracking-wider block text-center mt-2">Material Digital de Fácil Leitura em Celulares e Tablets 📲</span>
-            </div>
-
-            <!-- Right: Lista dos Bônus e Benefícios -->
-            <div class="lg:col-span-7 space-y-6">
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                
-                <!-- Deliverable 1 -->
-                <div class="bg-[#fcf6ee]/60 p-4 rounded-xl border border-[#f6ebdc] space-y-1.5 flex flex-col justify-between">
-                  <div class="space-y-1.5">
-                    <div class="flex items-center gap-2">
-                      <span class="text-xl">📅</span>
-                      <h4 class="font-bold text-sm text-[#3f3128]">Cardápios Completo 6 a 24 Meses</h4>
-                    </div>
-                    <p class="text-xs text-[#7a685c] leading-normal">Passo a passo mastigadinho dia após dia para nutrir seu bebê com variedade e segurança.</p>
-                  </div>
-                  <div class="pt-2 flex justify-end">
-                    <span class="bg-[#ca6b3e]/10 text-[#ca6b3e] text-[10px] font-extrabold px-2 py-0.5 rounded-md border border-[#ca6b3e]/20">Valor Individual: R$ 149,90</span>
-                  </div>
-                </div>
-
-                <!-- Deliverable 2 -->
-                <div class="bg-[#fcf6ee]/60 p-4 rounded-xl border border-[#f6ebdc] space-y-1.5 flex flex-col justify-between">
-                  <div class="space-y-1.5">
-                    <div class="flex items-center gap-2">
-                      <span class="text-xl">🍓</span>
-                      <h4 class="font-bold text-sm text-[#3f3128]">Bônus 1: Cortes de Frutas</h4>
-                    </div>
-                    <p class="text-xs text-[#7a685c] leading-normal">Tamanho, formato e corte seguro de cada fruta para evitar engasgos e dar autonomia (BLW).</p>
-                  </div>
-                  <div class="pt-2 flex justify-end">
-                    <span class="bg-[#8da36d]/10 text-[#8da36d] text-[10px] font-extrabold px-2 py-0.5 rounded-md border border-[#8da36d]/20">Valor Individual: R$ 39,90</span>
-                  </div>
-                </div>
-
-                <!-- Deliverable 3 -->
-                <div class="bg-[#fcf6ee]/60 p-4 rounded-xl border border-[#f6ebdc] space-y-1.5 flex flex-col justify-between">
-                  <div class="space-y-1.5">
-                    <div class="flex items-center gap-2">
-                      <span class="text-xl">🛡️</span>
-                      <h4 class="font-bold text-sm text-[#3f3128]">Bônus 2: Janela Imunológica</h4>
-                    </div>
-                    <p class="text-xs text-[#7a685c] leading-normal">O momento exato para introduzir alimentos alergênicos com segurança e blindar a saúde do bebê.</p>
-                  </div>
-                  <div class="pt-2 flex justify-end">
-                    <span class="bg-[#8da36d]/10 text-[#8da36d] text-[10px] font-extrabold px-2 py-0.5 rounded-md border border-[#8da36d]/20">Valor Individual: R$ 39,90</span>
-                  </div>
-                </div>
-
-                <!-- Deliverable 4 -->
-                <div class="bg-[#fcf6ee]/60 p-4 rounded-xl border border-[#f6ebdc] space-y-1.5 flex flex-col justify-between">
-                  <div class="space-y-1.5">
-                    <div class="flex items-center gap-2">
-                      <span class="text-xl">❄️</span>
-                      <h4 class="font-bold text-sm text-[#3f3128]">Bônus 3: Branqueamento e Armaz.</h4>
-                    </div>
-                    <p class="text-xs text-[#7a685c] leading-normal">Técnicas de congelamento para conservar as refeições sem perder nutrientes e com gosto de fresco.</p>
-                  </div>
-                  <div class="pt-2 flex justify-end">
-                    <span class="bg-[#8da36d]/10 text-[#8da36d] text-[10px] font-extrabold px-2 py-0.5 rounded-md border border-[#8da36d]/20">Valor Individual: R$ 39,90</span>
-                  </div>
-                </div>
-
-                <!-- Deliverable 5 -->
-                <div class="bg-[#fcf6ee]/60 p-4 rounded-xl border border-[#f6ebdc] space-y-1.5 flex flex-col justify-between">
-                  <div class="space-y-1.5">
-                    <div class="flex items-center gap-2">
-                      <span class="text-xl">⚠️</span>
-                      <h4 class="font-bold text-sm text-[#3f3128]">Bônus 4: Engasgo x Reflexo GAG</h4>
-                    </div>
-                    <p class="text-xs text-[#7a685c] leading-normal">Aprenda a diferenciar o reflexo natural de GAG de um engasgo real e aja com calma e segurança.</p>
-                  </div>
-                  <div class="pt-2 flex justify-end">
-                    <span class="bg-[#8da36d]/10 text-[#8da36d] text-[10px] font-extrabold px-2 py-0.5 rounded-md border border-[#8da36d]/20">Valor Individual: R$ 39,90</span>
-                  </div>
-                </div>
-
-                <!-- Deliverable 6 -->
-                <div class="bg-[#fcf6ee]/60 p-4 rounded-xl border border-[#f6ebdc] space-y-1.5 flex flex-col justify-between">
-                  <div class="space-y-1.5">
-                    <div class="flex items-center gap-2">
-                      <span class="text-xl">🥣</span>
-                      <h4 class="font-bold text-sm text-[#3f3128]">Bônus 5: Guia de Utensílios Pediátricos</h4>
-                    </div>
-                    <p class="text-xs text-[#7a685c] leading-normal">Economize comprando apenas pratinhos, colheres e cadeirinhas corretos recomendados por pediatras.</p>
-                  </div>
-                  <div class="pt-2 flex justify-end">
-                    <span class="bg-[#8da36d]/10 text-[#8da36d] text-[10px] font-extrabold px-2 py-0.5 rounded-md border border-[#8da36d]/20">Valor Individual: R$ 97,00</span>
-                  </div>
-                </div>
-
-              </div>
-
-              <!-- Conquista histórica block micro -->
-              <div class="bg-[#edf2e7] p-4 rounded-xl border border-[#c5d3b2] flex items-center gap-3">
-                <span class="text-2xl">🏆</span>
-                <p class="text-xs text-[#55693e] font-bold leading-normal m-0">
-                  Mais de <b>15.000 mamães</b> validaram e usaram este exato material para resgatar a tranquilidade nas refeições de seus pequenos.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- ==================== 4. MAMÃES SATISFEITAS: PROVA SOCIAL ==================== -->
-        <div class="bg-white rounded-[28px] md:rounded-[32px] p-6 md:p-10 shadow-[0_20px_50px_-12px_rgba(120,80,50,0.12)] space-y-8">
-          <div class="text-center max-w-xl mx-auto space-y-2">
-            <span class="text-[#ca6b3e] text-xs md:text-sm font-black uppercase tracking-widest block">Quem já passou por isso</span>
-            <h2 class="text-2xl md:text-3xl font-serif font-black text-[#3f3128]">Relatos reais de mães que saíram do desespero</h2>
-            <p class="text-sm text-[#7a685c]">Você não está sozinha. Milhares de famílias passaram pela mesma aflição antes de usar o Cardápio Ideal.</p>
-          </div>
-
-          <!-- Carousel Testimonials slider (Smooth transition in CSS) -->
-          <div class="relative bg-[#fcf6ee] rounded-2xl p-6 md:p-8 border border-[#f6ebdc] min-h-[220px] flex items-center">
-            
-            <!-- Slide 0 -->
-            <div id="test-slide-0" class="slide-active flex flex-col justify-between h-full space-y-4 w-full">
-              <div class="space-y-2">
-                <div class="flex items-center gap-1 text-[#8f6d27] text-base">
-                  ★★★★★
-                </div>
-                <p class="italic text-[#3f3128] text-sm md:text-base leading-relaxed font-serif">
-                  "Eu andava exausta e chorava toda vez que chegava a hora do Théo comer. Sentia que estava falhando. Com os cardápios em mãos, tudo ficou desenhado. Eu só abro, vejo a receita do dia e faço em minutos. Meu filho come de tudo hoje!"
-                </p>
-              </div>
-              <div class="flex items-center gap-3">
-                <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=100&h=100" class="w-10 h-10 rounded-full border-2 border-white object-cover shadow-sm" alt="Mariana" referrerpolicy="no-referrer" />
-                <div>
-                  <h4 class="font-bold text-sm text-[#3f3128]">Mariana Albuquerque</h4>
-                  <span class="text-xs text-[#7a685c] font-bold">Mãe do Théo (7 meses)</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Slide 1 -->
-            <div id="test-slide-1" class="slide-hidden flex flex-col justify-between h-full space-y-4 w-full">
-              <div class="space-y-2">
-                <div class="flex items-center gap-1 text-[#8f6d27] text-base">
-                  ★★★★★
-                </div>
-                <p class="italic text-[#3f3128] text-sm md:text-base leading-relaxed font-serif">
-                  "O Bento não aceitava nada além de leite. A pediatra me cobrava e eu me sentia muito culpada. Com os cortes BLW e as texturas corretas que aprendi aqui, ele começou a pegar os legumes e hoje come feliz. Indico demais para todas!"
-                </p>
-              </div>
-              <div class="flex items-center gap-3">
-                <img src="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&q=80&w=100&h=100" class="w-10 h-10 rounded-full border-2 border-white object-cover shadow-sm" alt="Gabriela" referrerpolicy="no-referrer" />
-                <div>
-                  <h4 class="font-bold text-sm text-[#3f3128]">Gabriela Santos</h4>
-                  <span class="text-xs text-[#7a685c] font-bold">Mãe do Bento (9 meses)</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Slide 2 -->
-            <div id="test-slide-2" class="slide-hidden flex flex-col justify-between h-full space-y-4 w-full">
-              <div class="space-y-2">
-                <div class="flex items-center gap-1 text-[#8f6d27] text-base">
-                  ★★★★★
-                </div>
-                <p class="italic text-[#3f3128] text-sm md:text-base leading-relaxed font-serif">
-                  "Eu não tinha tempo de planejar nada por causa do trabalho. Vivia no improviso dando papinha industrializada. Esse cronograma foi minha salvação! A lista de compras semanal me economizou horas e muito dinheiro no mercado."
-                </p>
-              </div>
-              <div class="flex items-center gap-3">
-                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=100&h=100" class="w-10 h-10 rounded-full border-2 border-white object-cover shadow-sm" alt="Karina" referrerpolicy="no-referrer" />
-                <div>
-                  <h4 class="font-bold text-sm text-[#3f3128]">Karina Lemos</h4>
-                  <span class="text-xs text-[#7a685c] font-bold">Mãe da Alice (11 meses)</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Slider controls on bottom right -->
-            <div class="absolute bottom-4 right-6 flex items-center gap-2">
-              <button onclick="prevSlide()" class="w-8 h-8 rounded-full border border-[#ecdcc8] bg-white flex items-center justify-center text-[#3f3128] hover:bg-[#ca6b3e] hover:text-white transition-all cursor-pointer select-none font-bold shadow-sm">
-                ←
-              </button>
-              <button onclick="nextSlide()" class="w-8 h-8 rounded-full border border-[#ecdcc8] bg-white flex items-center justify-center text-[#3f3128] hover:bg-[#ca6b3e] hover:text-white transition-all cursor-pointer select-none font-bold shadow-sm">
-                →
-              </button>
-            </div>
-
-          </div>
-        </div>
-
-        <!-- ==================== 5. OFERTA (CONDIÇÃO VITALÍCIA LIMITADA) ==================== -->
-        <div class="bg-gradient-to-b from-[#fdf6ec] to-[#faf0e0] border-2 border-[#ca6b3e] rounded-[28px] md:rounded-[32px] p-6 md:p-10 text-center shadow-[0_20px_50px_-12px_rgba(120,80,50,0.12)] relative overflow-hidden">
-          <div class="absolute top-4 right-4 md:top-6 md:right-6">
-            <span class="bg-[#f4e3be] text-[#8f6d27] font-black text-[10px] tracking-widest uppercase px-3.5 py-1.5 rounded-full border border-[#8f6d27]/20">
-              CONDIÇÃO VITALÍCIA LIMITADA ⚠️
-            </span>
-          </div>
-
-          <span class="text-[#ca6b3e] font-black text-xs md:text-sm tracking-widest uppercase block mb-2">
-            Apenas hoje • Liberação imediata
-          </span>
-          <h2 class="text-2xl md:text-3.5xl font-serif font-black text-[#3f3128] mb-4">
-            Acesso Completo aos Cardápios de 6 a 24 meses
-          </h2>
-
-          <p class="text-sm md:text-base text-[#7a685c] max-w-xl mx-auto leading-relaxed mb-8">
-            Adquira hoje o manual definitivo com todos os cronogramas diários, guias de textura, bônus de congelamento e segurança de cortes contra engasgos.
-          </p>
-
-          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center text-left max-w-3xl mx-auto mb-8">
-            <!-- Mockup Photo Column -->
-            <div class="lg:col-span-5 bg-white border border-[#ecdcc8] rounded-[22px] p-4 shadow-sm flex flex-col items-center">
-              <div class="relative w-32 h-44 bg-gradient-to-br from-[#f39b69] to-[#ca6b3e] rounded-xl shadow-xl flex flex-col justify-between p-3 text-white">
-                <span class="text-[7px] bg-white/20 px-1 py-0.5 rounded font-bold w-max">KIT OFICIAL</span>
-                <span class="text-xl">👶🍽️</span>
-                <div>
-                  <h4 class="font-serif text-[11px] font-black leading-tight">MÉTODO CARDÁPIO IDEAL</h4>
-                  <p class="text-[5px] opacity-80 mt-1">Guia Alimentar Prático</p>
-                </div>
-              </div>
-              <span class="text-[10px] text-[#7a685c] font-bold mt-3 text-center">Incluso Guia + Todos os Bônus</span>
-            </div>
-
-            <!-- Check Receivables Column -->
-            <div class="lg:col-span-7 space-y-3 bg-white/50 p-5 rounded-2xl border border-[#ecdcc8]/40">
-              <h4 class="font-bold text-[#3f3128] text-sm md:text-base uppercase tracking-wider mb-3">Você vai levar hoje:</h4>
-              
-              <div class="flex items-center justify-between gap-2 text-xs md:text-sm text-[#3f3128] border-b border-[#f2e2d0]/50 pb-2">
-                <div class="flex items-start gap-2">
-                  <span class="text-[#ca6b3e] font-bold">✔</span>
-                  <span><b>Cardápio Completo 6 a 24 Meses</b></span>
-                </div>
-                <span class="font-bold text-xs bg-[#ca6b3e]/10 text-[#ca6b3e] px-2 py-0.5 rounded whitespace-nowrap">R$ 149,90</span>
-              </div>
-              
-              <div class="flex items-center justify-between gap-2 text-xs md:text-sm text-[#3f3128] border-b border-[#f2e2d0]/50 pb-2">
-                <div class="flex items-start gap-2">
-                  <span class="text-[#ca6b3e] font-bold">✔</span>
-                  <span>Bônus 1: Cortes de Frutas</span>
-                </div>
-                <span class="font-bold text-xs bg-[#8da36d]/10 text-[#8da36d] px-2 py-0.5 rounded whitespace-nowrap">R$ 39,90</span>
-              </div>
-              
-              <div class="flex items-center justify-between gap-2 text-xs md:text-sm text-[#3f3128] border-b border-[#f2e2d0]/50 pb-2">
-                <div class="flex items-start gap-2">
-                  <span class="text-[#ca6b3e] font-bold">✔</span>
-                  <span>Bônus 2: Janela Imunológica</span>
-                </div>
-                <span class="font-bold text-xs bg-[#8da36d]/10 text-[#8da36d] px-2 py-0.5 rounded whitespace-nowrap">R$ 39,90</span>
-              </div>
-              
-              <div class="flex items-center justify-between gap-2 text-xs md:text-sm text-[#3f3128] border-b border-[#f2e2d0]/50 pb-2">
-                <div class="flex items-start gap-2">
-                  <span class="text-[#ca6b3e] font-bold">✔</span>
-                  <span>Bônus 3: Branqueamento e Armaz.</span>
-                </div>
-                <span class="font-bold text-xs bg-[#8da36d]/10 text-[#8da36d] px-2 py-0.5 rounded whitespace-nowrap">R$ 39,90</span>
-              </div>
-              
-              <div class="flex items-center justify-between gap-2 text-xs md:text-sm text-[#3f3128] border-b border-[#f2e2d0]/50 pb-2">
-                <div class="flex items-start gap-2">
-                  <span class="text-[#ca6b3e] font-bold">✔</span>
-                  <span>Bônus 4: Engasgo x Reflexo GAG</span>
-                </div>
-                <span class="font-bold text-xs bg-[#8da36d]/10 text-[#8da36d] px-2 py-0.5 rounded whitespace-nowrap">R$ 39,90</span>
-              </div>
-              
-              <div class="flex items-center justify-between gap-2 text-xs md:text-sm text-[#3f3128] border-b border-[#f2e2d0]/50 pb-2">
-                <div class="flex items-start gap-2">
-                  <span class="text-[#ca6b3e] font-bold">✔</span>
-                  <span>Bônus 5: Guia de Utensílios Pediátricos</span>
-                </div>
-                <span class="font-bold text-xs bg-[#8da36d]/10 text-[#8da36d] px-2 py-0.5 rounded whitespace-nowrap">R$ 97,00</span>
-              </div>
-
-              <div class="flex items-center justify-between gap-2 text-xs md:text-sm text-[#3f3128] pt-1">
-                <div class="flex items-start gap-2">
-                  <span class="text-[#ca6b3e] font-bold">⭐</span>
-                  <span class="font-bold text-[#8da36d]">Acesso Vitalício + Atualizações Gratuitas</span>
-                </div>
-                <span class="font-bold text-xs text-[#8da36d] uppercase tracking-wider">Incluso</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Price Tag with Anchoring -->
-          <div class="space-y-1 mb-8">
-            <div class="text-sm text-[#7a685c] font-bold">
-              De <s class="opacity-60">R$ 406,50</s> · só hoje pagamento único:
-            </div>
-            <div class="font-serif text-5xl md:text-6xl font-black text-[#ca6b3e] tracking-tight flex items-start justify-center">
-              <span class="text-2xl font-bold mt-2 mr-1">R$</span>97
-            </div>
-            <span class="inline-block bg-white text-[#8f6d27] font-extrabold text-xs px-4 py-1.5 rounded-full border border-[#f4e3be] shadow-sm mt-2">
-              Você economiza R$ 309,50 na sua primeira compra
-            </span>
-          </div>
-
-          <!-- ==================== 6. CTA AGRESSIVO ==================== -->
-          <div class="max-w-xl mx-auto space-y-4">
-            <p class="text-xs md:text-sm text-[#ca6b3e] font-extrabold uppercase tracking-widest block animate-pulse">
-              ⚠️ Não corra o risco de ver seu bebê recusar alimentos saudáveis por puro atraso no planejamento!
-            </p>
-            
-            <a href="https://pay.hub.la/h5EtFlMlCmL5W1RKJIJs" target="_blank" rel="noopener noreferrer" class="w-full inline-flex py-4 md:py-5 bg-gradient-to-b from-[#f39b69] to-[#ca6b3e] hover:from-[#f4a779] hover:to-[#d17446] text-white rounded-full font-black text-lg md:text-xl shadow-[0_12px_26px_-6px_rgba(202,107,62,0.55)] hover:scale-[1.01] transition-all items-center justify-center gap-3 cursor-pointer decoration-transparent">
-              Quero garantir o acesso vitalício agora
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-5 h-5 md:w-6 md:h-6 transition-transform group-hover:translate-x-1">
-                <path d="M5 12h14M13 6l6 6-6 6" />
-              </svg>
-            </a>
-
-            <p class="text-[11px] text-[#7a685c] leading-relaxed max-w-md mx-auto">
-              Ao clicar, você será direcionada para a nossa página de pagamento seguro. O acesso ao material chegará no seu e-mail em menos de 2 minutos.
-            </p>
-          </div>
-
-          <!-- Payment methods -->
-          <div class="flex flex-wrap justify-center gap-4 md:gap-6 mt-6 text-xs font-bold text-[#7a685c]/80">
-            <span class="flex items-center gap-1.5">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4 text-[#8da36d]">
-                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/>
-              </svg>
-              Cartão de Crédito
-            </span>
-            <span class="flex items-center gap-1.5">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4 text-[#8da36d]">
-                <polyline points="20 6 9 17 4 12" />
-              </svg>
-              PIX (Liberação Imediata)
-            </span>
-            <span class="flex items-center gap-1.5">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4 text-[#8da36d]">
-                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-              </svg>
-              Compra 100% Segura
-            </span>
-          </div>
-        </div>
-
-        <!-- ==================== FAQ SECTION WITH PEOPLE PHOTOS ==================== -->
-        <div class="bg-white rounded-[28px] md:rounded-[32px] p-6 md:p-10 shadow-[0_20px_50px_-12px_rgba(120,80,50,0.12)] border border-[#f6ebdc] space-y-6">
-          <div class="text-center max-w-xl mx-auto space-y-2">
-            <span class="text-[#ca6b3e] text-xs md:text-sm font-black uppercase tracking-widest block">Dúvidas Frequentes</span>
-            <h2 class="text-2xl md:text-3xl font-serif font-black text-[#3f3128]">As mamães também perguntam:</h2>
-            <p class="text-sm text-[#7a685c]">Clique nas dúvidas reais enviadas pelas nossas leitoras para conferir as respostas.</p>
-          </div>
-
-          <div class="space-y-4 max-w-3xl mx-auto">
-            <!-- FAQ 1 -->
-            <div class="border-b border-[#f2e2d0] pb-4">
-              <button onclick="toggleFaq(1)" class="w-full flex justify-between items-center text-left py-2 font-bold text-[#3f3128] text-sm md:text-base hover:text-[#ca6b3e] transition-colors cursor-pointer select-none border-0 bg-transparent">
-                <div class="flex items-center gap-3">
-                  <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=60&h=60" class="w-8 h-8 rounded-full border object-cover flex-shrink-0" alt="Mariana" referrerpolicy="no-referrer" />
-                  <span>Mariana: "Como vou receber o cardápio e baixar os bônus?"</span>
-                </div>
-                <span class="text-[#ca6b3e] text-xl transition-transform duration-200 font-bold" id="faq-icon-1">+</span>
-              </button>
-              <div class="hidden mt-2 text-xs md:text-sm text-[#7a685c] leading-relaxed transition-all pl-11" id="faq-ans-1">
-                O acesso é instantâneo! Assim que o seu Pix ou Cartão for aprovado, nossa plataforma envia automaticamente o link de download direto para o seu e-mail e WhatsApp. Você pode ler no celular, imprimir se preferir e consultar quando quiser.
-              </div>
-            </div>
-
-            <!-- FAQ 2 -->
-            <div class="border-b border-[#f2e2d0] pb-4">
-              <button onclick="toggleFaq(2)" class="w-full flex justify-between items-center text-left py-2 font-bold text-[#3f3128] text-sm md:text-base hover:text-[#ca6b3e] transition-colors cursor-pointer select-none border-0 bg-transparent">
-                <div class="flex items-center gap-3">
-                  <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=60&h=60" class="w-8 h-8 rounded-full border object-cover flex-shrink-0" alt="Karina" referrerpolicy="no-referrer" />
-                  <span>Karina: "Meu bebê ainda tem 4 meses. Vale a pena comprar agora?"</span>
-                </div>
-                <span class="text-[#ca6b3e] text-xl transition-transform duration-200 font-bold" id="faq-icon-2">+</span>
-              </button>
-              <div class="hidden mt-2 text-xs md:text-sm text-[#7a685c] leading-relaxed transition-all pl-11" id="faq-ans-2">
-                Sim, com certeza! É a recomendação oficial. Ao adquirir antes, você consegue estudar as orientações da fase de pré-introdução, organizar a lista de utensílios, planejar a feira sem correria e garantir que a primeira colherada aconteça com segurança e sem improvisos.
-              </div>
-            </div>
-
-            <!-- FAQ 3 -->
-            <div class="border-b border-[#f2e2d0] pb-4">
-              <button onclick="toggleFaq(3)" class="w-full flex justify-between items-center text-left py-2 font-bold text-[#3f3128] text-sm md:text-base hover:text-[#ca6b3e] transition-colors cursor-pointer select-none border-0 bg-transparent">
-                <div class="flex items-center gap-3">
-                  <img src="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&q=80&w=60&h=60" class="w-8 h-8 rounded-full border object-cover flex-shrink-0" alt="Gabriela" referrerpolicy="no-referrer" />
-                  <span>Gabriela: "E se o meu bebê não comer as receitas ou eu não gostar?"</span>
-                </div>
-                <span class="text-[#ca6b3e] text-xl transition-transform duration-200 font-bold" id="faq-icon-3">+</span>
-              </button>
-              <div class="hidden mt-2 text-xs md:text-sm text-[#7a685c] leading-relaxed transition-all pl-11" id="faq-ans-3">
-                Não se preocupe de forma alguma! Nós oferecemos uma Garantia Incondicional de 7 dias. Se por qualquer motivo você achar que o plano não te poupou tempo na cozinha ou que as receitas não serviram pro seu filho, basta enviar um e-mail para nós que devolvemos 100% do seu dinheiro, sem questionamentos.
-              </div>
-            </div>
-
-            <!-- FAQ 4 -->
-            <div class="border-b border-[#f2e2d0] pb-4">
-              <button onclick="toggleFaq(4)" class="w-full flex justify-between items-center text-left py-2 font-bold text-[#3f3128] text-sm md:text-base hover:text-[#ca6b3e] transition-colors cursor-pointer select-none border-0 bg-transparent">
-                <div class="flex items-center gap-3">
-                  <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=60&h=60" class="w-8 h-8 rounded-full border object-cover flex-shrink-0" alt="Aline" referrerpolicy="no-referrer" />
-                  <span>Aline: "O pagamento é único ou tem cobrança de mensalidades?"</span>
-                </div>
-                <span class="text-[#ca6b3e] text-xl transition-transform duration-200 font-bold" id="faq-icon-4">+</span>
-              </button>
-              <div class="hidden mt-2 text-xs md:text-sm text-[#7a685c] leading-relaxed transition-all pl-11" id="faq-ans-4">
-                O pagamento é totalmente único. Você paga apenas R$ 97 uma única vez e garante o acesso vitalício aos cardápios completos (6 a 24 meses), incluindo quaisquer futuras receitas ou bônus extras que adicionarmos futuramente ao material.
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Section Guarantee Refund Block -->
-        <div class="bg-[#edf2e7] rounded-[22px] p-5 md:p-6 border border-[#c5d3b2] flex flex-col sm:flex-row items-center sm:items-start gap-4 text-center sm:text-left">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-12 h-12 text-[#8da36d] flex-shrink-0">
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-          </svg>
-          <div>
-            <h4 class="font-bold text-[#55693e] text-base mb-1">Garantia Incondicional de 7 Dias</h4>
-            <p class="text-xs md:text-sm text-[#7a685c] leading-relaxed">
-              Teste todo o conteúdo dos cardápios sem riscos. Se nas primeiras colheradas você achar que o plano não facilitou a sua rotina materna, devolvemos 100% do seu investimento sem complicações.
-            </p>
-          </div>
-        </div>
-      </section>
-
-    </main>
-
-    <!-- Footer Branding area -->
-    <footer class="w-full py-8 md:py-10 border-t border-[#f6ebdc] bg-[#fcf6ee] text-center px-4">
-      <div class="max-w-3xl mx-auto space-y-3">
-        <p class="text-xs md:text-sm font-extrabold text-[#7a685c]">
-          <b>Mamãe Larissa Prado</b> · © 2026. Todos os direitos reservados.
-        </p>
-        <p class="text-[10px] md:text-xs text-[#7a685c]/70 max-w-2xl mx-auto leading-relaxed">
-          Este conteúdo é educativo e informativo. Não substitui o aconselhamento, diagnóstico ou acompanhamento clínico individualizado realizado por médico pediatra ou nutricionista do seu bebê.
-        </p>
-      </div>
-    </footer>
-
-    <!-- React build pipeline helper script -->
-    <script type="module" src="/src/main.tsx"></script>
-
-    <!-- Vanilla Javascript Dynamic Quiz Controller -->
-    <script>
-      // Diagnostic database config
-      const QUESTIONS = [
-        {
-          n: "Pergunta 1 de 5",
-          q: "Quantos meses tem o seu bebê hoje?",
-          key: "idade",
-          opts: [
-            { e: "🍼", t: "Ainda não começou (4 a 5 meses)", v: "pre" },
-            { e: "🥄", t: "Está começando agora (6 a 8 meses)", v: "inicio" },
-            { e: "🍌", t: "Já come algumas coisas (9 a 11 meses)", v: "meio" },
-            { e: "🍽️", t: "Come quase de tudo (12 meses ou mais)", v: "avancado" }
-          ]
-        },
-        {
-          n: "Pergunta 2 de 5",
-          q: "Hoje, qual é a sua maior dificuldade?",
-          key: "dor",
-          opts: [
-            { e: "🤔", t: "Não saber o que oferecer todo dia", v: "duvida" },
-            { e: "😰", t: "Medo de engasgo / textura errada", v: "engasgo" },
-            { e: "⏰", t: "Falta de tempo pra planejar", v: "tempo" },
-            { e: "🥦", t: "Meu bebê recusa muita coisa", v: "recusa" }
-          ]
-        },
-        {
-          n: "Pergunta 3 de 5",
-          q: "Como você decide o que dar pro seu bebê?",
-          key: "fonte",
-          opts: [
-            { e: "📱", t: "Pesquiso na internet na hora", v: "internet" },
-            { e: "👵", t: "Pergunto pra família / conhecidos", v: "familia" },
-            { e: "🤷‍♀️", t: "Vou no improviso, o que tiver em casa", v: "improviso" },
-            { e: "📖", t: "Tento seguir algum material, mas me perco", v: "perco" }
-          ]
-        },
-        {
-          n: "Pergunta 4 de 5",
-          q: "Como você se sente na hora da refeição dele?",
-          key: "emocao",
-          opts: [
-            { e: "😟", t: "Insegura, com medo de errar", v: "insegura" },
-            { e: "😩", t: "Cansada de pensar nisso todo dia", v: "cansada" },
-            { e: "😬", t: "Preocupada se ele está bem nutrido", v: "preocupada" },
-            { e: "🙂", t: "Tranquila, mas queria mais variedade", v: "variedade" }
-          ]
-        },
-        {
-          n: "Pergunta 5 de 5",
-          q: "O que mudaria a sua rotina agora?",
-          key: "desejo",
-          opts: [
-            { e: "✅", t: "Ter tudo pronto, só abrir e servir", v: "pronto" },
-            { e: "🛡️", t: "Ter segurança de estar acertando", v: "seguranca" },
-            { e: "🌈", t: "Variar sem ter que pensar muito", v: "variar" },
-            { e: "🧘‍♀️", t: "Parar de me preocupar com isso", v: "paz" }
-          ]
-        }
-      ];
-
-      const RESULTS = {
-        pre: {
-          tag: "Fase: Pré-introdução",
-          phase: "prestes a começar a introdução alimentar",
-          lead: "Você está no melhor momento possível: dá pra chegar 100% preparada antes da primeira colherada.",
-          warn: "O erro mais comum nessa fase é começar sem um plano e ir no improviso — e é aí que a insegurança e a recusa nascem."
-        },
-        inicio: {
-          tag: "Fase: Início (6 a 8 meses)",
-          phase: "no comecinho da introdução alimentar",
-          lead: "Essa é a fase que constrói (ou compromete) o paladar do seu bebê. Cada refeição agora conta pro resto da vida dele.",
-          warn: "Nessa fase, oferecer na textura errada ou pular a ordem certa dos alimentos é o que mais gera medo de engasgo e recusa."
-        },
-        meio: {
-          tag: "Fase: Evolução (9 a 11 meses)",
-          phase: "evoluindo nas texturas e sabores",
-          lead: "Seu bebê já provou algumas coisas — agora é a hora de ampliar com segurança, sem cair na mesmice que vira seletividade.",
-          warn: "Repetir sempre os mesmos alimentos nessa fase é o caminho mais curto pra criança seletiva lá na frente."
-        },
-        avancado: {
-          tag: "Fase: Consolidação (12+ meses)",
-          phase: "formando os hábitos que vão ficar pra vida",
-          lead: "O que seu filho aprende a comer agora vira o padrão dele. É a janela final pra blindar contra a seletividade.",
-          warn: "Achar que 'já passou a fase importante' é o erro que faz a criança travar em poucos alimentos e recusar o resto."
-        }
-      };
-
-      // App state
-      let currentIndex = 0;
-      let answers = {};
-      let activeSlide = 0;
-      const totalSlides = 3;
-
-      // DOM Screen Cache
-      const screenIntro = document.getElementById("screen-intro");
-      const screenQuiz = document.getElementById("screen-quiz");
-      const screenLoading = document.getElementById("screen-loading");
-      const screenResult = document.getElementById("screen-result");
-      const progressContainer = document.getElementById("progressBarContainer");
-      const progressFill = document.getElementById("progressBarFill");
-      const progressLabel = document.getElementById("progressBarLabel");
-
-      // Actions
-      function startQuiz() {
-        currentIndex = 0;
-        answers = {};
-        screenIntro.classList.add("hidden");
-        screenQuiz.classList.remove("hidden");
-        progressContainer.classList.remove("hidden");
-        progressContainer.classList.add("flex");
-        renderActiveQuestion();
-      }
-
-      function renderActiveQuestion() {
-        const q = QUESTIONS[currentIndex];
-        
-        // Update progress indicators
-        const progressPercentage = Math.round((currentIndex / QUESTIONS.length) * 100);
-        progressFill.style.width = progressPercentage + "%";
-        progressLabel.innerText = q.n;
-
-        const box = document.getElementById("quizQuestionBox");
-        
-        // Build option buttons dynamically with matching theme highlight logic
-        const optionsHtml = q.opts.map((opt, i) => {
-          const isSelected = answers[q.key] === opt.v;
-          const bgBorderClass = isSelected 
-            ? "bg-[#fbe6da]/30 border-[#ca6b3e] shadow-md" 
-            : "bg-white border-[#f2e2d0] hover:border-[#ca6b3e] hover:shadow-sm";
-          const radioDotClass = isSelected ? "scale-100" : "scale-0";
-          const dotBorderColor = isSelected ? "border-[#ca6b3e]" : "border-[#f2e2d0]";
-
-          return `
-            <button 
-              onclick="selectOption('${q.key}', '${opt.v}')"
-              class="w-full group flex items-center gap-4 md:gap-5 p-4 md:p-5 rounded-2xl border-2 transition-all text-left cursor-pointer ${bgBorderClass}"
-            >
-              <span class="text-2xl md:text-3xl flex-shrink-0 select-none">${opt.e}</span>
-              <div class="flex-1">
-                <span class="block font-bold text-sm md:text-base leading-snug ${isSelected ? 'text-[#ca6b3e]' : 'text-[#3f3128]'}">${opt.t}</span>
-              </div>
-              <div class="w-6 h-6 md:w-7 md:h-7 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-colors ${dotBorderColor}">
-                <div class="w-2.5 h-2.5 bg-[#ca6b3e] rounded-full transition-transform ${radioDotClass}"></div>
-              </div>
-            </button>
-          `;
-        }).join("");
-
-        box.innerHTML = `
-          <div class="mb-6 md:mb-8 text-center lg:text-left">
-            <span class="text-[#e28d62] text-xs md:text-sm font-black uppercase tracking-widest block mb-2">${q.n}</span>
-            <h3 class="text-xl md:text-2xl lg:text-3xl font-serif font-bold text-[#3f3128] leading-snug">${q.q}</h3>
-          </div>
-          <div class="space-y-4">
-            ${optionsHtml}
-          </div>
-        `;
-
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      }
-
-      function selectOption(key, value) {
-        answers[key] = value;
-        
-        // Highlight active and advance after brief cosmetic delay
-        renderActiveQuestion();
-
-        setTimeout(() => {
-          if (currentIndex < QUESTIONS.length - 1) {
-            currentIndex++;
-            renderActiveQuestion();
-          } else {
-            showLoadingScreen();
-          }
-        }, 300);
-      }
-
-      function handleBack() {
-        if (currentIndex > 0) {
-          currentIndex--;
-          renderActiveQuestion();
-        } else {
-          resetQuiz();
-        }
-      }
-
-      function showLoadingScreen() {
-        screenQuiz.classList.add("hidden");
-        progressContainer.classList.add("hidden");
-        screenLoading.classList.remove("hidden");
-        window.scrollTo({ top: 0, behavior: "smooth" });
-
-        // Step by step animation markers
-        const steps = [
-          { item: "load-step-1", icon: "load-icon-1" },
-          { item: "load-step-2", icon: "load-icon-2" },
-          { item: "load-step-3", icon: "load-icon-3" }
-        ];
-
-        steps.forEach((step, idx) => {
-          setTimeout(() => {
-            const row = document.getElementById(step.item);
-            const badge = document.getElementById(step.icon);
-            if (row && badge) {
-              row.classList.remove("opacity-40");
-              row.classList.add("opacity-100", "font-bold");
-              badge.classList.remove("bg-sand");
-              badge.classList.add("bg-[#8da36d]");
-            }
-          }, 700 * (idx + 1));
-        });
-
-        // Redirect to results
-        setTimeout(() => {
-          showResultsScreen();
-        }, 2800);
-      }
-
-      function showResultsScreen() {
-        screenLoading.classList.add("hidden");
-        screenResult.classList.remove("hidden");
-        window.scrollTo({ top: 0, behavior: "smooth" });
-
-        // Retrieve dynamic values based on selected infant age bracket
-        const selectedAgeValue = answers.idade || "inicio";
-        const resultInfo = RESULTS[selectedAgeValue] || RESULTS.inicio;
-
-        // Render variables to details
-        document.getElementById("resultTag").innerText = resultInfo.tag;
-        document.getElementById("resultPhase").innerText = resultInfo.phase;
-        document.getElementById("resultLead").innerText = resultInfo.lead;
-        document.getElementById("resultWarn").innerText = resultInfo.warn;
-
-        // Generate dynamic aggressive copy for the Solução Personalizada section
-        generateCustomAnalysis(answers);
-      }
-
-      function generateCustomAnalysis(ans) {
-        const box = document.getElementById("customAnalysisBox");
-        
-        let ageLabel = "seu bebê";
-        if (ans.idade === "pre") ageLabel = "seu bebê de 4 a 5 meses";
-        else if (ans.idade === "inicio") ageLabel = "seu bebê de 6 a 8 meses";
-        else if (ans.idade === "meio") ageLabel = "seu bebê de 9 a 11 meses";
-        else if (ans.idade === "avancado") ageLabel = "seu bebê de 1 ano ou mais";
-
-        let dorText = "";
-        if (ans.dor === "duvida") {
-          dorText = "Você acorda e dorme com a exaustão mental de não saber o que colocar no pratinho dele hoje. Esse estresse drena o seu dia e faz o bebê perceber a refeição como um momento de ansiedade.";
-        } else if (ans.dor === "engasgo") {
-          dorText = "O medo paralisante de ver seu bebê engasgar ou engolir a textura errada está te travando. Isso faz você atrasar a transição de consistência, o que atrofia os músculos da mastigação dele.";
-        } else if (ans.dor === "tempo") {
-          dorText = "A sua rotina corrida te obriga a decidir tudo no improviso, de última hora. No desespero, você acaba repetindo os mesmos alimentos ou cedendo a industrializados caros e cheios de aditivos.";
-        } else if (ans.dor === "recusa") {
-          dorText = "A rejeição de verduras e frutas pelo seu bebê já começou a te desesperar. Se você continuar forçando ou improvisando, essa recusa vai se consolidar em uma seletividade alimentar severa pro resto da infância.";
-        }
-
-        let emocaoText = "";
-        if (ans.emocao === "insegura") {
-          emocaoText = "Essa constante insegurança te faz sentir que você está falhando na única coisa que importa: a saúde do seu próprio filho. O clima na cozinha virou um fardo pesado cheio de medo.";
-        } else if (ans.emocao === "cansada") {
-          emocaoText = "Você se sente esgotada fisicamente e psicologicamente de pensar no prato dele. Cozinhar virou uma tortura diária e você está literalmente sem forças para pesquisar na internet.";
-        } else if (ans.emocao === "preocupada") {
-          emocaoText = "A preocupação silenciosa de que ele possa crescer com déficit nutricional ou imunidade baixa não te deixa dormir tranquila.";
-        } else if (ans.emocao === "variedade") {
-          emocaoText = "Você sabe que precisa variar mais os ingredientes, mas a falta de criatividade e o medo de desperdiçar comida te deixam presa na mesmice do arroz com caldinho.";
-        }
-
-        let desejoText = "";
-        if (ans.desejo === "pronto") {
-          desejoText = "Você precisa de um plano onde tudo já esteja planejado, calculado e pronto para apenas abrir e servir, sem que você precise gastar nenhum neurônio pensando em combinações nutricionais.";
-        } else if (ans.desejo === "seguranca") {
-          desejoText = "Você deseja a paz de espírito inabalável de olhar para o pratinho do seu filho e ter a certeza absoluta de que está oferecendo exatamente o que o corpinho dele precisa.";
-        } else if (ans.desejo === "variar") {
-          desejoText = "Seu sonho é ver seu filho comer brócolis, abóbora, feijão e carnes variadas com prazer e com a boca cheia de sorrisos.";
-        } else if (ans.desejo === "paz") {
-          desejoText = "Você quer de volta a leveza na mesa. Parar de brigar e chorar na hora da janta e voltar a ter refeições felizes em família.";
-        }
-
-        box.innerHTML = `
-          <p>
-            Entenda a gravidade da situação: <b>${dorText}</b>
-          </p>
-          <p>
-            O diagnóstico clínico é claro: <b>${emocaoText}</b> Continuar sem um cronograma por mais uma única semana é o caminho mais curto para fazer <b>${ageLabel}</b> travar no desenvolvimento de texturas.
-          </p>
-          <p class="font-bold text-[#ca6b3e] border-l-4 border-[#ca6b3e] pl-4 italic">
-            "Você está literalmente perdida e exausta sem este material. A janela biológica de aceitação do cérebro do bebê é curta e não espera você vencer o medo ou encontrar tempo livre."
-          </p>
-          <p>
-            A boa notícia é que o alívio imediato está disponível hoje: <b>${desejoText}</b> Com o nosso cronograma completo de 6 a 24 meses, você elimina 100% da adivinhação do seu dia a dia.
-          </p>
-        `;
-      }
-
-      function resetQuiz() {
-        currentIndex = 0;
-        answers = {};
-        
-        // Hide other pages
-        screenQuiz.classList.add("hidden");
-        screenLoading.classList.add("hidden");
-        screenResult.classList.add("hidden");
-        progressContainer.classList.add("hidden");
-        
-        // Reset loader UI checks
-        for (let i = 1; i <= 3; i++) {
-          const row = document.getElementById("load-step-" + i);
-          const badge = document.getElementById("load-icon-" + i);
-          if (row && badge) {
-            row.classList.add("opacity-40");
-            row.classList.remove("opacity-100", "font-bold");
-            badge.classList.add("bg-sand");
-            badge.classList.remove("bg-[#8da36d]");
-          }
-        }
-
-        // Show start screen
-        screenIntro.classList.remove("hidden");
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      }
-
-      // Testimonial Carousel Controllers
-      function showSlide(index) {
-        for (let i = 0; i <= totalSlides; i++) {
-          const slide = document.getElementById("test-slide-" + i);
-          if (slide) {
-            if (i === index) {
-              slide.classList.remove("slide-hidden");
-              slide.classList.add("slide-active");
-            } else {
-              slide.classList.remove("slide-active");
-              slide.classList.add("slide-hidden");
-            }
-          }
-        }
-      }
-
-      function nextSlide() {
-        activeSlide = (activeSlide + 1) > totalSlides ? 0 : activeSlide + 1;
-        showSlide(activeSlide);
-      }
-
-      function prevSlide() {
-        activeSlide = (activeSlide - 1) < 0 ? totalSlides : activeSlide - 1;
-        showSlide(activeSlide);
-      }
-
-      // Auto rotation for testimonials
-      setInterval(() => {
-        nextSlide();
-      }, 7000);
-
-      // FAQ Accordion Toggle
-      function toggleFaq(id) {
-        const answer = document.getElementById("faq-ans-" + id);
-        const icon = document.getElementById("faq-icon-" + id);
-        
-        if (answer.classList.contains("hidden")) {
-          answer.classList.remove("hidden");
-          icon.innerText = "−";
-          icon.style.transform = "rotate(180deg)";
-        } else {
-          answer.classList.add("hidden");
-          icon.innerText = "+";
-          icon.style.transform = "rotate(0deg)";
-        }
-      }
-    </script>
-  </body>
-</html>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="css/styles-BJ5o3NHr.css" data-precedence="default"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" data-precedence="default"><title>Quiz Bebê Comilão — Descubra o cardápio ideal do seu bebê</title><meta property="og:title" content="Quiz Bebê Comilão — Descubra o plano de introdução alimentar do seu bebê"><meta property="og:description" content="Quiz interativo de prontidão alimentar: descubra em 60 segundos o estágio exato da introdução alimentar do seu bebê e receba um plano personalizado."><meta property="og:type" content="website"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Quiz Bebê Comilão — Descubra o plano de introdução alimentar do seu bebê"><meta name="twitter:description" content="Quiz interativo de prontidão alimentar: descubra em 60 segundos o estágio exato da introdução alimentar do seu bebê e receba um plano personalizado."><meta property="og:image" content="images/id-preview-fa6f09c6--df2f5ab7-fe63-49bb-8f80-432553ef8430.lovable.app-1782302047885.png"><meta name="twitter:image" content="https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/33782078-6674-45f3-8aec-58007b70ec04/id-preview-fa6f09c6--df2f5ab7-fe63-49bb-8f80-432553ef8430.lovable.app-1782302047885.png"><meta name="description" content="Em 60 segundos descubra a fase exata da introdução alimentar do seu bebê e receba um plano personalizado por Larissa Prado."><link rel="modulepreload" href="/assets/index-DzLqiMn4.js"><link rel="modulepreload" href="/assets/routes-6-A4_O0O.js"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+<style>
+	@font-face {
+		font-family: 'CameraPlainVariable';
+		src: url('fonts/CameraPlainVariable.woff2') format('woff2');
+		font-weight: 100 900;
+		font-style: normal;
+		font-display: swap;
+	}
+
+	#lovable-badge {
+		--badge-bg: #1b1b1b;
+		--badge-text: #c5c1b9;
+		--badge-text-hover: #dcdad5;
+		--badge-radius: 6px;
+		--badge-padding: 8px;
+		--badge-gap: 6px;
+		--badge-shadow: 
+			0 0 0 1px rgba(0, 0, 0, 0.88),
+			0 1px 0 0 rgba(0, 0, 0, 0.04),
+			0 2px 2px -1px rgba(0, 0, 0, 0.08),
+			0 4px 4px -2px rgba(0, 0, 0, 0.08),
+			0 8px 8px -4px rgba(0, 0, 0, 0.08),
+			0 16px 16px -8px rgba(0, 0, 0, 0.08);
+		--badge-transition-duration: 0.2s;
+		--badge-transition-easing: cubic-bezier(0.16, 1, 0.32, 1);
+		--focus-color: #575ECF;
+		--focus-offset: 2px;
+		--focus-width: 2px;
+		
+		position: fixed;
+		bottom: 12px;
+		right: 12px;
+		height: 24px;
+		display: flex;
+		align-items: center;
+		z-index: 1000000;
+		background-color: var(--badge-bg) !important;
+		color: var(--badge-text) !important;
+		border-radius: var(--badge-radius);
+		box-shadow: var(--badge-shadow) !important;
+		font-size: 12px;
+		font-family: CameraPlainVariable, "CameraPlainVariable Fallback", -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+		font-weight: 400 !important;
+		text-transform: none !important;
+		font-feature-settings: normal !important;
+		transform: translateZ(0);
+		will-change: transform, opacity;
+	}
+
+	#lovable-badge-cta {
+		display: flex;
+		align-items: center;
+		gap: var(--badge-gap);
+		padding: 0 var(--badge-padding);
+		height: 100%;
+		color: inherit;
+		text-decoration: none;
+		white-space: nowrap;
+		border-radius: var(--badge-radius) 0 0 var(--badge-radius);
+		transition: 
+			background-color var(--badge-transition-duration) ease,
+			color var(--badge-transition-duration) ease,
+			transform 0.1s ease;
+	}
+
+	#lovable-badge-cta:hover {
+		background: rgba(255, 255, 255, 0.04);
+		color: var(--badge-text-hover);
+	}
+
+	#lovable-badge-cta:active {
+		transform: scale(0.98);
+	}
+
+	#lovable-badge-cta:focus {
+		outline: none;
+	}
+
+	#lovable-badge-cta:focus-visible {
+		outline: var(--focus-width) solid var(--focus-color);
+		outline-offset: var(--focus-offset);
+		z-index: 1;
+	}
+
+	#lovable-badge-text {
+		line-height: 1;
+	}
+
+	#lovable-badge-divider {
+		width: 1px;
+		height: 24px;
+		background-color: rgba(255, 255, 255, 0.04);
+		flex-shrink: 0;
+	}
+
+	#lovable-badge-close {
+		width: 24px;
+		height: 24px;
+		min-width: 24px;
+		min-height: 24px;
+		cursor: pointer;
+		background: none;
+		border: none;
+		padding: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 0 var(--badge-radius) var(--badge-radius) 0;
+		flex-shrink: 0;
+		transition: 
+			background-color var(--badge-transition-duration) ease,
+			transform 0.1s ease;
+	}
+
+	#lovable-badge-close:hover {
+		background: rgba(255, 255, 255, 0.04);
+	}
+
+	#lovable-badge-close:active {
+		transform: scale(0.92);
+	}
+
+	#lovable-badge-close:focus {
+		outline: none;
+	}
+
+	#lovable-badge-close:focus-visible {
+		outline: var(--focus-width) solid var(--focus-color);
+		outline-offset: calc(var(--focus-offset) * -1);
+		z-index: 1;
+	}
+
+	#lovable-badge-close svg path {
+		fill: var(--badge-text);
+		transition: fill var(--badge-transition-duration) ease;
+	}
+
+	#lovable-badge-close:hover svg path {
+		fill: var(--badge-text-hover);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		#lovable-badge-cta,
+		#lovable-badge-close,
+		#lovable-badge-close svg path {
+			transition: none;
+		}
+		
+		#lovable-badge-cta:active,
+		#lovable-badge-close:active {
+			transform: none;
+		}
+	}
+
+	@media (prefers-contrast: high) {
+		#lovable-badge {
+			--badge-bg: #000;
+			--badge-text: #fff;
+			--badge-text-hover: #fff;
+			border: 2px solid currentColor;
+		}
+		
+		#lovable-badge-cta:focus-visible,
+		#lovable-badge-close:focus-visible {
+			outline-width: 3px;
+		}
+	}
+</style>
+<script defer="" src="js/~flock.js" data-proxy-url="/~api/analytics"></script><script defer="" src="js/events.js" data-artifact-kind="dwl_content_hash" data-artifact-id="a78759c935e5c1492579913327b65bf6d5da7e475442326927efe791867dd825" data-commit-sha="7812522f141d3e2856d55275c0b9899c184ce6e6" data-context-token="v1.eyJwcm9qZWN0X2lkIjoiZGYyZjVhYjctZmU2My00OWJiLThmODAtNDMyNTUzZWY4NDMwIiwiYXJ0aWZhY3Rfa2luZCI6ImR3bF9jb250ZW50X2hhc2giLCJhcnRpZmFjdF9pZCI6ImE3ODc1OWM5MzVlNWMxNDkyNTc5OTEzMzI3YjY1YmY2ZDVkYTdlNDc1NDQyMzI2OTI3ZWZlNzkxODY3ZGQ4MjUiLCJjb21taXRfc2hhIjoiNzgxMjUyMmYxNDFkM2UyODU2ZDU1Mjc1YzBiOTg5OWMxODRjZTZlNiIsImV4cCI6MTc4MjMxMDg4Mn0.ZXkDJRjX6WOwZlZtEhqFf1mkiGRqdEJrhaOcoa-gNYE"></script></head><body><!--$--><main class="min-h-screen bg-background"><div class="pointer-events-none fixed inset-0 -z-10 overflow-hidden"><div class="absolute -top-32 -left-24 h-96 w-96 rounded-full bg-blush opacity-40 blur-3xl"></div><div class="absolute top-1/3 -right-32 h-[28rem] w-[28rem] rounded-full bg-honey opacity-30 blur-3xl"></div><div class="absolute bottom-0 left-1/3 h-80 w-80 rounded-full bg-sage opacity-25 blur-3xl"></div></div><header class="mx-auto flex max-w-5xl items-center justify-between px-5 pt-6"><div class="flex items-center gap-2"><div class="grid h-10 w-10 place-items-center rounded-full bg-primary text-primary-foreground"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="10" r="4"></circle><path d="M9.5 10h.01M14.5 10h.01"></path><path d="M10.5 12c.6.4 1.4.4 2 0"></path><path d="M6 20c0-3 2.7-5 6-5s6 2 6 5"></path></svg></div><span class="font-display text-lg font-semibold text-foreground">Bebê Comilão</span></div></header><section class="mx-auto px-5 pb-16 pt-10 max-w-3xl"><div class="text-center" style="opacity:0;transform:translateY(16px)"><span class="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-primary"><span class="h-1.5 w-1.5 rounded-full bg-primary animate-pulse"></span>Diagnóstico gratuito • 60 segundos</span><h1 class="mt-6 text-balance text-4xl font-semibold leading-[1.05] text-foreground sm:text-5xl md:text-6xl">Descubra em <em class="not-italic text-primary">60 segundos</em> o cardápio ideal do seu bebê</h1><p class="mx-auto mt-5 max-w-xl text-balance text-base text-muted-foreground sm:text-lg">Responda 7 perguntas rápidas e receba um diagnóstico personalizado com cronograma, alimentos liberados e os erros que você precisa evitar essa semana.</p><div class="mt-8 flex flex-col items-center gap-3"><button class="group inline-flex items-center gap-2 rounded-full bg-primary px-8 py-4 text-base font-semibold text-primary-foreground shadow-[var(--shadow-soft)] transition-transform hover:scale-[1.02] active:scale-[0.98]">Começar o quiz grátis<svg viewBox="0 0 24 24" width="18" height="18" class="transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></button><span class="text-xs text-muted-foreground">Sem cadastro • 100% gratuito • Resultado na hora</span></div><div class="mt-10 flex items-center justify-center gap-3"><div class="flex -space-x-2"><img src="images/mom-1-B9LkLU66.jpg" alt="" width="36" height="36" loading="lazy" class="h-9 w-9 rounded-full object-cover ring-2 ring-card"><img src="images/mom-2-CcYuD1N-.jpg" alt="" width="36" height="36" loading="lazy" class="h-9 w-9 rounded-full object-cover ring-2 ring-card"><img src="images/mom-3-zGqlFOr3.jpg" alt="" width="36" height="36" loading="lazy" class="h-9 w-9 rounded-full object-cover ring-2 ring-card"><img src="images/mom-4-ad41sUMk.jpg" alt="" width="36" height="36" loading="lazy" class="h-9 w-9 rounded-full object-cover ring-2 ring-card"></div><div class="text-left"><div class="flex items-center gap-1 text-primary"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.6L12 17.5l-5.9 3.1 1.2-6.6L2.5 9.4l6.6-.9L12 2.5Z"></path></svg><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.6L12 17.5l-5.9 3.1 1.2-6.6L2.5 9.4l6.6-.9L12 2.5Z"></path></svg><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.6L12 17.5l-5.9 3.1 1.2-6.6L2.5 9.4l6.6-.9L12 2.5Z"></path></svg><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.6L12 17.5l-5.9 3.1 1.2-6.6L2.5 9.4l6.6-.9L12 2.5Z"></path></svg><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.6L12 17.5l-5.9 3.1 1.2-6.6L2.5 9.4l6.6-.9L12 2.5Z"></path></svg></div><p class="text-xs text-muted-foreground">+15.000 mamães já validaram o método</p></div></div></div></section></main><!--/$--><script type="module" async="">import("/assets/index-DzLqiMn4.js")</script>
+<aside id="lovable-badge" role="complementary" dir="ltr" lang="en" aria-label="Edit with Lovable">
+	<a id="lovable-badge-cta" target="_blank" href="https://lovable.dev/projects/df2f5ab7-fe63-49bb-8f80-432553ef8430?utm_source=lovable-badge" rel="noopener nofollow" aria-label="Edit with Lovable">
+		<span id="lovable-badge-text">Edit with</span>
+		<svg xmlns="http://www.w3.org/2000/svg" width="52" height="16" fill="none" viewBox="0 0 52 16">
+  <path fill="#FCFBF8" fill-rule="evenodd" d="M20.318 5.25c.643 0 1.206.14 1.69.418a2.81 2.81 0 0 1 1.118 1.191c.266.513.4 1.115.4 1.807s-.134 1.296-.4 1.812a2.81 2.81 0 0 1-1.118 1.193c-.484.278-1.047.418-1.69.418s-1.208-.14-1.695-.418a2.85 2.85 0 0 1-1.125-1.193c-.262-.516-.393-1.12-.393-1.812s.131-1.294.393-1.807a2.848 2.848 0 0 1 1.125-1.191c.487-.279 1.052-.418 1.695-.418Zm0 1.425c-.27 0-.504.076-.7.228-.193.147-.34.37-.443.67-.102.295-.153.66-.153 1.093 0 .435.05.801.153 1.1.102.3.25.524.443.676.196.147.43.22.7.22.27 0 .502-.073.694-.22.193-.152.341-.375.443-.67.103-.299.153-.667.153-1.106 0-.65-.112-1.145-.337-1.481a1.08 1.08 0 0 0-.953-.51ZM32.7 5.25c.61 0 1.127.1 1.549.3.422.197.74.48.953.849.217.368.325.809.325 1.32v2.704c0 .29.02.562.062.812.044.245.108.4.19.466V12h-1.935a5.895 5.895 0 0 1-.105-.684 7.745 7.745 0 0 1-.02-.228 2.293 2.293 0 0 1-.151.203c-.205.242-.47.437-.793.584-.32.143-.685.215-1.094.215-.406 0-.77-.08-1.094-.24a1.845 1.845 0 0 1-.756-.682 1.984 1.984 0 0 1-.27-1.045c0-.606.178-1.069.535-1.388.356-.324.87-.534 1.542-.633l1.125-.16c.225-.032.403-.074.534-.123a.622.622 0 0 0 .288-.196.549.549 0 0 0 .093-.327.65.65 0 0 0-.11-.367.702.702 0 0 0-.32-.27c-.14-.07-.31-.105-.51-.105-.32 0-.576.083-.768.251-.193.164-.298.39-.314.676h-1.923c.016-.434.147-.82.393-1.155.25-.34.596-.604 1.039-.792.442-.189.954-.283 1.535-.283Zm.99 3.498a.98.98 0 0 1-.215.14 2.49 2.49 0 0 1-.584.178l-.473.092c-.315.061-.553.156-.713.283-.155.127-.233.305-.233.534 0 .23.084.412.252.547.168.135.383.203.645.203s.494-.058.694-.173c.201-.118.355-.282.461-.49.11-.21.166-.448.166-.714v-.6Zm4.526-2.375c.065-.125.138-.243.221-.349.197-.25.437-.44.719-.571.282-.135.6-.203.952-.203.528 0 .988.138 1.377.412.389.275.688.67.896 1.186.21.512.314 1.12.314 1.824 0 .7-.107 1.309-.32 1.825-.213.512-.518.906-.915 1.18-.393.275-.854.412-1.383.412-.352 0-.667-.062-.946-.184a1.832 1.832 0 0 1-.7-.554 2.2 2.2 0 0 1-.234-.383V12h-1.843V3h1.862v3.373Zm1.284.296c-.274 0-.51.085-.707.253-.192.163-.338.397-.436.7a3.376 3.376 0 0 0-.148 1.05c0 .406.05.759.148 1.058.098.299.243.53.436.694.197.164.433.246.707.246.279 0 .512-.082.7-.246.193-.164.336-.395.43-.694.099-.3.148-.652.148-1.058 0-.405-.05-.757-.147-1.056-.095-.299-.238-.53-.43-.694a1.015 1.015 0 0 0-.7-.253Zm9.416-1.419c.602 0 1.136.131 1.604.393.466.262.829.643 1.086 1.143.263.5.394 1.097.394 1.794 0 .25-.002.449-.006.596H47.51c.018.288.071.538.164.75a1.3 1.3 0 0 0 .491.596c.214.13.465.196.757.196.319 0 .583-.082.792-.246.209-.167.34-.403.393-.706h1.862a2.48 2.48 0 0 1-.485 1.235 2.54 2.54 0 0 1-1.051.805c-.439.188-.949.283-1.53.283-.655 0-1.225-.125-1.708-.375a2.672 2.672 0 0 1-1.13-1.143c-.267-.508-.4-1.137-.4-1.887 0-.712.14-1.327.418-1.843a2.86 2.86 0 0 1 1.155-1.186c.491-.27 1.051-.405 1.678-.405Zm-.044 1.345c-.274 0-.516.068-.725.203a1.29 1.29 0 0 0-.479.59 2.045 2.045 0 0 0-.132.498h2.562a1.873 1.873 0 0 0-.138-.602 1.061 1.061 0 0 0-.418-.516 1.243 1.243 0 0 0-.67-.173Z" clip-rule="evenodd"></path>
+  <path fill="#FCFBF8" d="m26.605 9.995 1.342-4.566h1.924L27.628 12h-2.07l-2.33-6.57h1.98l1.397 4.565Zm-13.013.143h2.256c1.632 0 1.421 1.837 1.418 1.861h-5.603V3h1.93v7.138Zm31.516 1.861h-1.862V3h1.862v8.999Z"></path>
+  <path fill="url(#a)" fill-rule="evenodd" d="M2.7 3c1.492 0 2.7 1.192 2.7 2.663v1.012h.9c1.49 0 2.7 1.192 2.7 2.662S7.791 12 6.3 12H0V5.663C0 4.193 1.209 3 2.7 3Z" clip-rule="evenodd"></path>
+  <defs>
+    <radialGradient id="a" cx="0" cy="0" r="1" gradientTransform="matrix(-1.54236 7.07838 -10.231 -2.15602 4.627 5.022)" gradientUnits="userSpaceOnUse">
+      <stop offset=".106" stop-color="#FE7B02"></stop>
+      <stop offset=".394" stop-color="#FE3F21"></stop>
+      <stop offset=".608" stop-color="#F858BC"></stop>
+      <stop offset=".929" stop-color="#575ECF"></stop>
+    </radialGradient>
+  </defs>
+</svg>
+
+
+	</a>
+	
+	<span id="lovable-badge-divider" aria-hidden="true"></span>
+	
+	<button id="lovable-badge-close" aria-label="Dismiss" title="Dismiss" type="button">
+		<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 16 16" aria-hidden="true">
+			<path d="M10.646 4.646a.5.5 0 1 1 .707.708L8.707 8l2.646 2.646a.5.5 0 1 1-.707.707L8 8.707l-2.646 2.646a.5.5 0 1 1-.708-.707L7.293 8 4.646 5.354a.5.5 0 1 1 .708-.708L8 7.293l2.646-2.647Z"></path>
+		</svg>
+	</button>
+</aside>
+<script>
+	// Don't show the lovable-badge if the page is in an iframe or if it's being rendered by puppeteer (screenshot service)
+	if (window.self !== window.top || navigator.userAgent.includes('puppeteer')) {
+		var badge = document.getElementById('lovable-badge');
+		if (badge) {
+			badge.style.display = 'none';
+		}
+	}
+
+	// Add click event listener to close button with animation
+	var closeButton = document.getElementById('lovable-badge-close');
+	if (closeButton) {
+		closeButton.addEventListener('click', function(event) {
+			event.preventDefault();
+			event.stopPropagation();
+			var badge = document.getElementById('lovable-badge');
+			if (badge) {
+				badge.classList.add('closing');
+				setTimeout(function() {
+					if (badge) {
+						badge.style.display = 'none';
+					}
+				}, 240);
+			}
+		});
+	}
+</script>
+</body></html>

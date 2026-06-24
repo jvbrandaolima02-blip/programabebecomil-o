@@ -1,6 +1,0 @@
-{
-  "name": "Cardápio Ideal do Bebê",
-  "description": "Descubra o cardápio ideal e diagnóstico alimentar para o seu bebê baseado em perguntas rápidas.",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
-}
